@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JAM &amp; GD Coach</title>
+<style>
+:root{--bg:#faf8f4;--card:#fff;--ink:#1d2433;--mute:#667085;--line:#e4dfd5;--acc:#e0552b;--acc2:#1f6f5c;--soft:#fdeee8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14161c;--card:#1d2029;--ink:#eceef3;--mute:#9aa3b5;--line:#2c3140;--acc:#ff7a4d;--acc2:#4fc2a5;--soft:#2b2420;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#14161c;--card:#1d2029;--ink:#eceef3;--mute:#9aa3b5;--line:#2c3140;--acc:#ff7a4d;--acc2:#4fc2a5;--soft:#2b2420;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:20px 16px 48px}
+h1{font-family:Georgia,"Times New Roman",serif;font-size:1.9rem;margin:6px 0 2px}
+.sub{color:var(--mute);margin:0 0 18px}
+nav{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:18px;overflow-x:auto}
+nav button{background:none;border:0;color:var(--mute);font:inherit;font-weight:600;padding:10px 14px;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+nav button.on{color:var(--acc);border-color:var(--acc)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px}
+.topic{font-family:Georgia,serif;font-size:1.45rem;line-height:1.3;margin:6px 0 12px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+select,textarea,input{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 11px}
+textarea{width:100%;min-height:130px;resize:vertical}
+.btn{background:var(--acc);color:#fff;border:0;border-radius:10px;padding:10px 16px;font:inherit;font-weight:600;cursor:pointer}
+.btn.alt{background:var(--soft);color:var(--acc)}.btn.g{background:var(--acc2)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.timer{font-size:3rem;font-weight:700;font-variant-numeric:tabular-nums;color:var(--acc)}
+.bar{height:8px;background:var(--line);border-radius:8px;overflow:hidden;margin:6px 0 12px}
+.bar i{display:block;height:100%;background:var(--acc);width:0;transition:width .3s}
+.mute{color:var(--mute);font-size:.92rem}
+.score{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:10px 0}
+.score div{background:var(--soft);border-radius:10px;padding:10px;text-align:center}
+.score b{display:block;font-size:1.5rem;color:var(--acc)}
+.chat{display:flex;flex-direction:column;gap:8px;max-height:420px;overflow-y:auto;margin-bottom:10px}
+.msg{padding:9px 12px;border-radius:12px;background:var(--bg);border:1px solid var(--line)}
+.msg.me{background:var(--soft);align-self:flex-end;max-width:90%}
+.msg small{display:block;font-weight:700;color:var(--acc2)}
+.msg.me small{color:var(--acc)}
+ul{padding-left:20px}li{margin:4px 0}
+.hide{display:none}
+.fb h3{margin:14px 0 4px;font-size:1rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>JAM &amp; GD Coach</h1>
+<p class="sub">Practise Just A Minute and Group Discussions with AI feedback on every attempt.</p>
+<nav id="nav">
+<button data-t="jam" class="on">JAM</button><button data-t="gd">Group Discussion</button><button data-t="guide">Guide</button>
+</nav>
+
+<section id="jam">
+<div class="card">
+<div class="row"><select id="jcat"><option>Random</option><option>Abstract</option><option>Social issues</option><option>Business &amp; tech</option><option>Everyday life</option><option>Current affairs</option></select>
+<button class="btn alt" id="jnew">New topic</button></div>
+<div class="topic" id="jtopic">Tap “New topic” to begin</div>
+<div class="row"><div class="timer" id="jtime">60</div><button class="btn" id="jstart" disabled>Start speaking</button><button class="btn alt hide" id="jstop">Finish early</button></div>
+<div class="bar"><i id="jbar"></i></div>
+<textarea id="jtext" placeholder="Speak with the mic or type what you said…"></textarea>
+<div class="row" style="margin-top:8px"><button class="btn alt hide" id="jmic">🎤 Dictate</button><button class="btn g" id="jeval">Get feedback</button><span class="mute" id="jwc"></span></div>
+</div>
+<div class="card hide fb" id="jfb"></div>
+</section>
+
+<section id="gd" class="hide">
+<div class="card">
+<div class="row"><select id="gcat"><option>Random</option><option>Social issues</option><option>Business &amp; economy</option><option>Technology &amp; AI</option><option>Education</option><option>Case study</option></select>
+<button class="btn alt" id="gnew">New topic</button></div>
+<div class="topic" id="gtopic">Tap “New topic” to begin</div>
+<p class="mute">You’ll discuss with three AI participants: an aggressive debater, a quiet analyst and a data-driven moderate. Open the discussion, then respond to them.</p>
+<div class="chat" id="chat"></div>
+<textarea id="gtext" style="min-height:80px" placeholder="Make your point…" disabled></textarea>
+<div class="row" style="margin-top:8px"><button class="btn" id="gsend" disabled>Send</button><button class="btn alt hide" id="gmic">🎤 Dictate</button><button class="btn g" id="gend" disabled>End &amp; evaluate</button></div>
+</div>
+<div class="card hide fb" id="gfb"></div>
+</section>
+
+<section id="guide" class="hide">
+<div class="card"><h3>JAM rules of thumb</h3>
+<ul><li>Start within 3 seconds: a clear opening line, not “umm, so…”.</li>
+<li>Use a simple structure: hook, two or three points, a closing line.</li>
+<li>Never stop. If you lose the thread, pivot to a related angle.</li>
+<li>Avoid repetition, hesitation and fillers (“basically”, “like”, “you know”).</li>
+<li>Aim for about 120–150 words in 60 seconds.</li></ul></div>
+<div class="card"><h3>GD rules of thumb</h3>
+<ul><li>Initiate with a definition, a fact or a framing, within the first minute if you can.</li>
+<li>Quality over quantity: 3–4 well-argued interventions beat constant interruption.</li>
+<li>Reference others (“Building on Priya’s point…”) and add something new.</li>
+<li>Use data, examples and structure (economic, social, ethical angles).</li>
+<li>Rescue a stalled group, and summarise if the discussion is drifting.</li>
+<li>Disagree with the idea, never the person.</li></ul></div>
+</div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+let sample=null,dict=null;
+(async()=>{try{sample=await claude.use("sample")}catch(e){}
+try{dict=await claude.use("dictation")}catch(e){}
+if(dict){$("jmic").classList.remove("hide");$("gmic").classList.remove("hide")}
+if(!sample){$("jeval").disabled=true;$("jeval").title="AI is unavailable in this view"}})();
+
+document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>{
+document.querySelectorAll("#nav button").forEach(x=>x.classList.toggle("on",x===b));
+["jam","gd","guide"].forEach(s=>$(s).classList.toggle("hide",s!==b.dataset.t))});
+
+const esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+async function ask(prompt){
+ if(!sample) throw new Error("AI isn’t available on this page view.");
+ return await sample.json(prompt);
+}
+function mic(btn,ta){
+ let on=false;
+ btn.onclick=async()=>{
+  if(!dict)return;
+  try{
+   if(on){await dict.stop();return}
+   dict.onFinal(({text})=>{ta.value+=(ta.value&&!ta.value.endsWith(" ")?" ":"")+text;ta.dispatchEvent(new Event("input"))});
+   dict.onState(({state})=>{on=state==="listening";btn.textContent=on?"⏹ Stop dictation":"🎤 Dictate"});
+   await dict.start();
+  }catch(e){btn.textContent="🎤 Dictation unavailable"}
+ };
+}
+mic($("jmic"),$("jtext"));mic($("gmic"),$("gtext"));
+
+/* ---------- JAM ---------- */
+let jt=null,jiv=null,left=60;
+function setTimer(){$("jtime").textContent=left;$("jbar").style.width=((60-left)/60*100)+"%"}
+function jstop(){clearInterval(jiv);jiv=null;$("jstart").classList.remove("hide");$("jstop").classList.add("hide");$("jstart").textContent="Restart"}
+$("jnew").onclick=async()=>{
+ $("jnew").disabled=true;$("jtopic").textContent="Thinking of a topic…";
+ try{
+  const r=await ask(`Give ONE fresh Just A Minute (JAM) speaking topic for Indian campus/MBA practice. Category: ${$("jcat").value}. Short (2-8 words). Return JSON: {"topic":"..."}`);
+  jt=r.topic;$("jtopic").textContent=jt;$("jstart").disabled=false;
+ }catch(e){$("jtopic").textContent="Couldn’t fetch a topic. Try again."}
+ $("jnew").disabled=false;
+};
+$("jstart").onclick=()=>{
+ left=60;setTimer();$("jtext").value="";$("jfb").classList.add("hide");
+ $("jstart").classList.add("hide");$("jstop").classList.remove("hide");
+ jiv=setInterval(()=>{left--;setTimer();if(left<=0)jstop()},1000);
+};
+$("jstop").onclick=jstop;
+$("jtext").oninput=()=>{const n=$("jtext").value.trim().split(/\s+/).filter(Boolean).length;$("jwc").textContent=n?n+" words":""};
+$("jeval").onclick=async()=>{
+ const t=$("jtext").value.trim();
+ if(!jt||t.split(/\s+/).length<8){alert("Pick a topic and speak or type at least a few sentences first.");return}
+ const used=60-left||60;
+ $("jeval").disabled=true;$("jfb").classList.remove("hide");$("jfb").innerHTML="<p class='mute'>Evaluating…</p>";
+ try{
+  const r=await ask(`You are a strict but kind JAM (Just A Minute) coach. Topic: "${jt}". The speaker talked for about ${used} seconds. Transcript (may be dictated, so ignore punctuation errors): """${t}""". Evaluate on a 1-10 scale. Return JSON: {"fluency":n,"content":n,"structure":n,"vocabulary":n,"overall":n,"repetitions":["..."],"fillers":["..."],"strengths":["..."],"improvements":["..."],"sample_opening":"a stronger 2-sentence opening for this topic"}`);
+  const sc=["fluency","content","structure","vocabulary"].map(k=>`<div><b>${r[k]}/10</b>${k}</div>`).join("");
+  const li=a=>"<ul>"+(a||[]).map(x=>`<li>${esc(x)}</li>`).join("")+"</ul>";
+  $("jfb").innerHTML=`<h3 style="margin-top:0">Overall: ${r.overall}/10</h3><div class="score">${sc}</div>
+  <h3>What worked</h3>${li(r.strengths)}<h3>Improve next time</h3>${li(r.improvements)}
+  <h3>Repetition</h3>${li(r.repetitions)}<h3>Fillers</h3>${li(r.fillers)}
+  <h3>A stronger opening</h3><p>${esc(r.sample_opening)}</p>`;
+ }catch(e){$("jfb").innerHTML="<p>Couldn’t evaluate right now. Please try again.</p>"}
+ $("jeval").disabled=false;
+};
+
+/* ---------- GD ---------- */
+let gt=null,log=[];
+function render(){
+ $("chat").innerHTML=log.map(m=>`<div class="msg ${m.who==="You"?"me":""}"><small>${esc(m.who)}</small>${esc(m.text)}</div>`).join("");
+ $("chat").scrollTop=1e9;
+}
+$("gnew").onclick=async()=>{
+ $("gnew").disabled=true;$("gtopic").textContent="Thinking of a topic…";log=[];render();$("gfb").classList.add("hide");
+ try{
+  const r=await ask(`Give ONE Group Discussion topic for Indian MBA/placement practice. Category: ${$("gcat").value}. Make it debatable. Return JSON: {"topic":"..."}`);
+  gt=r.topic;$("gtopic").textContent=gt;
+  ["gtext","gsend","gend"].forEach(i=>$(i).disabled=false);
+  log.push({who:"Moderator",text:"The floor is open. Please start the discussion."});render();
+ }catch(e){$("gtopic").textContent="Couldn’t fetch a topic. Try again."}
+ $("gnew").disabled=false;
+};
+$("gsend").onclick=async()=>{
+ const t=$("gtext").value.trim();if(!t)return;
+ log.push({who:"You",text:t});$("gtext").value="";render();
+ $("gsend").disabled=true;
+ const hist=log.map(m=>m.who+": "+m.text).join("\n");
+ try{
+  const r=await ask(`Simulate a realistic Group Discussion on "${gt}". Participants: Arjun (aggressive, interrupts, strong opinions), Meera (quiet analyst, speaks rarely but with sharp, data-backed insight), Karan (moderate, builds consensus, cites examples). Conversation so far:\n${hist}\nWrite the next 2 or 3 short interventions (max 45 words each) reacting to the latest point by "You" and each other. Not every participant must speak. Return JSON array: [{"who":"Arjun","text":"..."}]`);
+  (Array.isArray(r)?r:[]).forEach(m=>log.push({who:m.who,text:m.text}));
+ }catch(e){log.push({who:"Moderator",text:"Technical hiccup. Please continue."})}
+ render();$("gsend").disabled=false;
+};
+$("gend").onclick=async()=>{
+ const mine=log.filter(m=>m.who==="You");
+ if(!mine.length){alert("Make at least one point first.");return}
+ $("gend").disabled=true;$("gfb").classList.remove("hide");$("gfb").innerHTML="<p class='mute'>Evaluating…</p>";
+ try{
+  const r=await ask(`You are an expert GD evaluator. Topic: "${gt}". Full discussion:\n${log.map(m=>m.who+": "+m.text).join("\n")}\nEvaluate only "You". Score 1-10. Return JSON: {"initiative":n,"content":n,"communication":n,"teamwork":n,"overall":n,"strengths":["..."],"improvements":["..."],"missed_angles":["angles or facts they could have used"],"one_line_verdict":"..."}`);
+  const sc=["initiative","content","communication","teamwork"].map(k=>`<div><b>${r[k]}/10</b>${k}</div>`).join("");
+  const li=a=>"<ul>"+(a||[]).map(x=>`<li>${esc(x)}</li>`).join("")+"</ul>";
+  $("gfb").innerHTML=`<h3 style="margin-top:0">Overall: ${r.overall}/10</h3><p>${esc(r.one_line_verdict)}</p><div class="score">${sc}</div>
+  <h3>What worked</h3>${li(r.strengths)}<h3>Improve next time</h3>${li(r.improvements)}<h3>Angles you missed</h3>${li(r.missed_angles)}`;
+ }catch(e){$("gfb").innerHTML="<p>Couldn’t evaluate right now. Please try again.</p>"}
+ $("gend").disabled=false;
+};
+</script>
+</body>
+</html>
