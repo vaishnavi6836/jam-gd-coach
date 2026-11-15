@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JAM &amp; GD Coach</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+<h1>JAM &amp; GD Coach</h1>
+<p class="sub">Practise Just A Minute and Group Discussions with AI feedback on every attempt.</p>
+<nav id="nav">
+<button data-t="jam" class="on">JAM</button><button data-t="gd">Group Discussion</button><button data-t="guide">Guide</button>
+</nav>
+
+<section id="jam">
+<div class="card">
+<div class="row"><select id="jcat"><option>Random</option><option>Abstract</option><option>Social issues</option><option>Business &amp; tech</option><option>Everyday life</option><option>Current affairs</option></select>
+<button class="btn alt" id="jnew">New topic</button></div>
+<div class="topic" id="jtopic">Tap “New topic” to begin</div>
+<div class="row"><div class="timer" id="jtime">60</div><button class="btn" id="jstart" disabled>Start speaking</button><button class="btn alt hide" id="jstop">Finish early</button></div>
+<div class="bar"><i id="jbar"></i></div>
+<textarea id="jtext" placeholder="Speak with the mic or type what you said…"></textarea>
+<div class="row" style="margin-top:8px"><button class="btn alt hide" id="jmic">🎤 Dictate</button><button class="btn g" id="jeval">Get feedback</button><span class="mute" id="jwc"></span></div>
+</div>
+<div class="card hide fb" id="jfb"></div>
+</section>
+
+<section id="gd" class="hide">
+<div class="card">
+<div class="row"><select id="gcat"><option>Random</option><option>Social issues</option><option>Business &amp; economy</option><option>Technology &amp; AI</option><option>Education</option><option>Case study</option></select>
+<button class="btn alt" id="gnew">New topic</button></div>
+<div class="topic" id="gtopic">Tap “New topic” to begin</div>
+<p class="mute">You’ll discuss with three AI participants: an aggressive debater, a quiet analyst and a data-driven moderate. Open the discussion, then respond to them.</p>
+<div class="chat" id="chat"></div>
+<textarea id="gtext" style="min-height:80px" placeholder="Make your point…" disabled></textarea>
+<div class="row" style="margin-top:8px"><button class="btn" id="gsend" disabled>Send</button><button class="btn alt hide" id="gmic">🎤 Dictate</button><button class="btn g" id="gend" disabled>End &amp; evaluate</button></div>
+</div>
+<div class="card hide fb" id="gfb"></div>
+</section>
+
+<section id="guide" class="hide">
+<div class="card"><h3>JAM rules of thumb</h3>
+<ul><li>Start within 3 seconds: a clear opening line, not “umm, so…”.</li>
+<li>Use a simple structure: hook, two or three points, a closing line.</li>
+<li>Never stop. If you lose the thread, pivot to a related angle.</li>
+<li>Avoid repetition, hesitation and fillers (“basically”, “like”, “you know”).</li>
+<li>Aim for about 120–150 words in 60 seconds.</li></ul></div>
+<div class="card"><h3>GD rules of thumb</h3>
+<ul><li>Initiate with a definition, a fact or a framing, within the first minute if you can.</li>
+<li>Quality over quantity: 3–4 well-argued interventions beat constant interruption.</li>
+<li>Reference others (“Building on Priya’s point…”) and add something new.</li>
+<li>Use data, examples and structure (economic, social, ethical angles).</li>
+<li>Rescue a stalled group, and summarise if the discussion is drifting.</li>
+<li>Disagree with the idea, never the person.</li></ul></div>
+</div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
